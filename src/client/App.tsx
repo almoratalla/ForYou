@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, JSX } from "react";
 import { Navigate, Route, Routes, useSearchParams } from "react-router-dom";
 
 import Login from "@/screens/Login";
@@ -11,6 +11,7 @@ import Subscriptions from "./screens/Subscriptions";
 import Explore from "./screens/Explore";
 import Playlists from "./screens/Playlists";
 import NotFound from "./screens/NotFound";
+import PrivacyPolicy from "./screens/Policies/PrivacyPolicy";
 
 const isLoggedIn = (access: string | null, element: JSX.Element, page?: string) => {
     return access && access !== "undefined" ? element : <Login page={page} />;
@@ -33,6 +34,7 @@ const App = () => {
                     <Route path="/explore" element={<Explore />} />
                     <Route path="/playlists" element={searchParams.get("demo") === "true" ? <Playlists isDemo={true} /> : isLoggedIn(accessToken, <Playlists />, "playlists")} />
                     <Route path="/foryou" element={<Navigate to="/" replace />} />
+                    <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </Layout>

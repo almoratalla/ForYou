@@ -73,6 +73,10 @@ const Login: FC<{ page?: string }> = ({ page }) => {
                                 </Link>
                             </div>
                         </div>
+                        <span>
+                            By using ForYou and by signing in, you agree to be bound by <a href="https://www.youtube.com/t/terms">Youtube Terms of Service</a>, this app&#39;s{" "}
+                            <Link to="/privacy-policy">Privacy Policy</Link> and <a href="http://www.google.com/policies/privacy">Google Privacy Policy</a>
+                        </span>
                     </main>
                 </section>
             </div>

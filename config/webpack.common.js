@@ -9,14 +9,14 @@ const getEnvFromDotEnvFile = dotenv.config()
 let envKeys
 
 if (getEnvFromDotEnvFile.error) {
-  console.log('Getting environment variables from build args for production') // eslint-disable-line
-  envKeys = {
-    'process.env.NODE_ENV': JSON.stringify('production'),
-  }
+    console.log('Getting environment variables from build args for production') // eslint-disable-line
+    envKeys = {
+        'process.env.NODE_ENV': JSON.stringify('production'),
+    }
 } else {
-  envKeys = {
-    'process.env.CLIENT_ID': JSON.stringify(getEnvFromDotEnvFile.parsed['CLIENT_ID']),
-  }
+    envKeys = {
+        'process.env.CLIENT_ID': JSON.stringify(getEnvFromDotEnvFile.parsed['CLIENT_ID']),
+    }
 }
 
 module.exports = {
@@ -49,11 +49,16 @@ module.exports = {
                 test: /\.svg$/,
                 issuer: /\.[jt]sx?$/,
                 use: ['@svgr/webpack'],
+            },
+            {
+                test: /\.mjs$/,
+                include: /node_modules/,
+                type: "javascript/auto"
             }
         ]
     },
     resolve: {
-        extensions: ["*", ".js", ".jsx", ".ts", ".tsx", ".md"],
+        extensions: [".js", ".jsx", ".ts", ".tsx", ".md", ".mjs"],
         alias: {
             "@": path.resolve(__dirname, "../src/client"),
             "@components": path.resolve(__dirname, "../src/client/components"),
@@ -82,7 +87,7 @@ module.exports = {
             ]
         }),
         new webpack.ProvidePlugin({
-            process: "process/browser"
+            process: "process"
         })
     ]
 };

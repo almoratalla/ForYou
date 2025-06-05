@@ -83,7 +83,7 @@ module.exports = {
                 FunctionExpression: {
                     parameters: "first"
                 },
-                SwitchCase: 1 
+                SwitchCase: 1
             }
         ],
         "@typescript-eslint/member-delimiter-style": 0,
@@ -147,7 +147,6 @@ module.exports = {
         indent: ["error", 4, { "SwitchCase": 1 }],
         "jsdoc/check-alignment": "error",
         "jsdoc/check-indentation": "error",
-        "jsdoc/newline-after-description": "error",
         "max-classes-per-file": ["error", 1],
         "new-parens": "error",
         "newline-before-return": 1,

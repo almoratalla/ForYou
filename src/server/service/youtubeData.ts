@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import * as puppeteer from "puppeteer";
+import puppeteer from "puppeteer";
 
 import { Error$OAuthError, Schema$Profile, Schema$Subscriptions } from "@utils/customTypings/youtubeDataAPIType";
 import { Schema$ChannelListResponse, Schema$ChannelListItem } from "@utils/customTypings/Schema$ChannelListResponse";

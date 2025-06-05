@@ -1,5 +1,5 @@
 import { Link, useLocation, useSearchParams } from "react-router-dom";
-import { FC, ReactElement, useState, useRef, ChangeEvent, MouseEvent, useEffect } from "react";
+import { FC, ReactElement, useState, useRef, ChangeEvent, MouseEvent, useEffect, PropsWithChildren } from "react";
 import { CSSTransition } from "react-transition-group";
 
 import ForYouBrand from "@resources/assets/foryou-brand.svg";
@@ -137,7 +137,7 @@ const DropdownMenu: FC<{ id: string; title: string; thumbnail: string; authURI?:
         setMenuHeight(themeNodeRef.current && themeNodeRef.current.offsetHeight + 35);
     };
 
-    const DropdownMenuItem: FC<{ leftIcon?: string | ReactElement; rightIcon?: string; goToMenu?: string; leftThumbnail?: string; back?: boolean }> = ({
+    const DropdownMenuItem: FC<PropsWithChildren<{ leftIcon?: string | ReactElement; rightIcon?: string; goToMenu?: string; leftThumbnail?: string; back?: boolean }>> = ({
         children,
         leftIcon,
         rightIcon,
@@ -254,7 +254,7 @@ const DropdownMenu: FC<{ id: string; title: string; thumbnail: string; authURI?:
     );
 };
 
-const DropdownNavItem: FC<{ icon?: ReactElement }> = ({ icon, children }) => {
+const DropdownNavItem: FC<PropsWithChildren<{ icon?: ReactElement }>> = ({ icon, children }) => {
     const [open, setOpen] = useState(false);
 
     return (

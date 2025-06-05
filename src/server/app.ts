@@ -9,7 +9,7 @@ import logger from "jet-logger";
 import StatusCodes from "http-status-codes";
 import colors from "colors";
 import compression from "compression";
-import expressStatusMonitor from "express-status-monitor";
+// import expressStatusMonitor from "express-status-monitor";
 
 import router from "@api/routes";
 
@@ -33,7 +33,7 @@ app.set("views", viewsDir);
 app.set("trust proxy", 1);
 
 // Middlewares
-app.use(expressStatusMonitor());
+// app.use(expressStatusMonitor());
 app.use(express.static(staticDir));
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
