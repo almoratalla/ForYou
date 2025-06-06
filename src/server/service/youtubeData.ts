@@ -398,7 +398,7 @@ class DataService {
         try {
             const browser = await puppeteer.launch({ defaultViewport: null, args: ["--no-sandbox", "--disable-setuid-sandbox"] });
             const page = await browser.newPage();
-            await page.goto("https://youtube.com", {
+            await page.goto("https://www.youtube.com/feed/trending", {
                 waitUntil: "domcontentloaded",
                 timeout: 10000
             });
@@ -427,20 +427,20 @@ class DataService {
             //                         div#metadata
             //                           div#byline-container | ytd-badge-supported-renderer > ytd-channel-name > div#container > div#text-container > yt-formatted-string > a.yt-formatted-string
             //                         div#metadata-line > spans
-            const contentsList = await page.$$eval("#contents > ytd-rich-item-renderer.ytd-rich-grid-row", (contents) => {
+            const contentsList = await page.$$eval("#contents > ytd-item-section-renderer > #contents #contents #grid-container ytd-video-renderer", (contents) => {
                 const contentMap = Array.from(contents).map((element, idx) => {
-                    const videoTitleLink = element.querySelector<HTMLAnchorElement>("a#video-title-link");
-                    const videoTitle = videoTitleLink?.querySelector<HTMLElement>("yt-formatted-string#video-title");
+                    const videoTitleLink = element.querySelector<HTMLAnchorElement>("a#video-title");
+                    const videoTitle = videoTitleLink?.querySelector<HTMLElement>("ytd-formatted-string");
                     const link = element.querySelector<HTMLAnchorElement>("a#thumbnail");
-                    const durationOverlay = link?.querySelector<HTMLSpanElement>("#overlays span");
-                    const details = element.querySelector<HTMLElement>("#details");
+                    const durationOverlay = link?.querySelector<HTMLSpanElement>("#overlays badge-shape");
+                    const details = element.querySelector<HTMLElement>("#channel-info");
                     const channelAvatarLink = details?.querySelector<HTMLAnchorElement>("a#avatar-link");
-                    const channelAvatar = channelAvatarLink?.querySelector<HTMLImageElement>("img#img");
-                    const channelDetailsTitle = details?.querySelector<HTMLAnchorElement>("#meta #metadata ytd-channel-name yt-formatted-string#text a.yt-formatted-string");
-                    const channelDetailsIsVerified = details?.querySelector<HTMLElement>(`#details #meta #metadata ytd-channel-name svg`);
-                    const channelDetailsSpans = details?.querySelectorAll<HTMLSpanElement>("#meta #metadata #metadata-line span") || [];
+                    const channelAvatar = details?.querySelector<HTMLImageElement>("a#channel-thumbnail");
+                    const channelDetailsTitle = element?.querySelector<HTMLAnchorElement>("ytd-channel-name yt-formatted-string#text a.yt-formatted-string");
+                    const channelDetailsIsVerified = element?.querySelector<HTMLElement>(`ytd-channel-name ytd-badge-supported-renderer yt-icon`);
+                    const channelDetailsSpans = element?.querySelectorAll<HTMLSpanElement>("#metadata-line span") || [];
                     const spanArray = Array.from(channelDetailsSpans);
-                    const YOUTUBE_REGEX = /(^(https?):\/\/([\w.]+|[en]).youtube.com\/watch\?v=)/g;
+                    const YOUTUBE_REGEX = /(^(https?):\/\/([\w.]+|[en]).youtube.com\/(watch\?v=|shorts\/))/g;
                     const id: string = link?.href.replace(YOUTUBE_REGEX, "") || "";
                     const timeDuration = durationOverlay?.innerText.trim() || durationOverlay?.innerHTML.trim() || "";
 
@@ -475,7 +475,7 @@ class DataService {
                 return Array.from(contentMap);
             });
 
-            const richContents = await page.$$eval("#contents > ytd-rich-section-renderer", (contents) => {
+            const richContents = await page.$$eval("#contents > ytd-rich-section-renderer > #contents #contents #grid-container ytd-video-renderer", (contents) => {
                 const richContentsArray = Array.from(contents).map((content) => {
                     const shelfHeader = content.querySelector<HTMLDivElement>("ytd-rich-shelf-renderer #rich-shelf-header");
                     const shelfContents = content.querySelectorAll<HTMLDivElement>("ytd-rich-shelf-renderer #contents > ytd-rich-item-renderer");
@@ -546,7 +546,7 @@ class DataService {
                 return richContentsArray;
             });
 
-            await browser.close();
+            // await browser.close();
 
             return { page: pageTitle, contents: contentsList, richContents: richContents.filter((rc) => rc.type !== "" || rc.contents.length > 0) };
         } catch (err) {

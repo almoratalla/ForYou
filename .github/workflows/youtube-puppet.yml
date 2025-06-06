@@ -1,0 +1,22 @@
+name: YouTube Puppeteer Cron
+
+on:
+    schedule:
+        - cron: "*/30 * * * *" # every 30 minutes UTC
+    workflow_dispatch:
+
+jobs:
+    run-puppeteer-task:
+        runs-on: ubuntu-latest
+        env:
+            UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+            UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+            # Add other env vars as needed (e.g., Google API keys)
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+            - run: npm ci
+            - run: npm run build
+            - run: node dist/scripts/youtubePuppetScript.js

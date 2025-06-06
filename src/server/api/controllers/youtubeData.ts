@@ -2,10 +2,12 @@ import { Request, Response, NextFunction } from "express";
 
 import { Schema$Profile, Error$OAuthError } from "@utils/customTypings/youtubeDataAPIType";
 import YoutubeDataService from "@server/service/youtubeData";
-import { OtherRichContents, YTDATA_CACHE, YT_DATA_CONTENTS } from "@server/tasks/youtubePuppet";
+import { OtherRichContents, YT_DATA_CONTENTS } from "@server/tasks/youtubePuppet";
 import ServerError from "@server/utils/classes/ServerError";
+import { YoutubeCacheService } from "@server/service/youtubeCache";
 
 const YoutubeData = new YoutubeDataService();
+const cacheService = new YoutubeCacheService();
 
 /**
  * GET /api/data/mine - Get My Youtube Data Controller
@@ -199,30 +201,22 @@ export const getMyYoutubeSubscriptions = (req: Request<Record<string, unknown>, 
  * @route /api/data/explore
  * @response OK: { page: string, content: content: richContents: richContent } - BAD_RESPONSE: Error
  */
-export const getYoutubeExploreData = (_req: Request, res: Response, next: NextFunction) => {
+export const getYoutubeExploreData = async (_req: Request, res: Response, next: NextFunction) => {
     try {
         const YTDATA_EXPLORE_CONTENTS = "YTDATA_EXPLORE_CONTENTS";
         const YTDATA_EXPLORE_RICHCONTENTS_SHORTS = "YTDATA_EXPLORE_RICHCONTENTS_SHORTS";
         const YTDATA_EXPLORE_RICHCONTENTS_TRENDING = "YTDATA_EXPLORE_RICHCONTENTS_TRENDING";
         const YTDATA_EXPLORE_RICHCONTENTS_OTHERS = "YTDATA_EXPLORE_RICHCONTENTS_OTHERS";
 
-        let ytec = YTDATA_CACHE.get(YTDATA_EXPLORE_CONTENTS) as YT_DATA_CONTENTS;
-        let ytercs = YTDATA_CACHE.get(YTDATA_EXPLORE_RICHCONTENTS_SHORTS) as YT_DATA_CONTENTS;
-        let yterct = YTDATA_CACHE.get(YTDATA_EXPLORE_RICHCONTENTS_TRENDING) as YT_DATA_CONTENTS;
-        let yterco = YTDATA_CACHE.get(YTDATA_EXPLORE_RICHCONTENTS_OTHERS) as OtherRichContents;
+        let ytec = (await cacheService.getCache(YTDATA_EXPLORE_CONTENTS)) as YT_DATA_CONTENTS;
+        let ytercs = (await cacheService.getCache(YTDATA_EXPLORE_RICHCONTENTS_SHORTS)) as YT_DATA_CONTENTS;
+        let yterct = (await cacheService.getCache(YTDATA_EXPLORE_RICHCONTENTS_TRENDING)) as YT_DATA_CONTENTS;
+        let yterco = (await cacheService.getCache(YTDATA_EXPLORE_RICHCONTENTS_OTHERS)) as OtherRichContents;
 
-        if (ytec === undefined) {
-            ytec = [];
-        }
-        if (ytercs === undefined) {
-            ytercs = [];
-        }
-        if (yterct === undefined) {
-            yterct = [];
-        }
-        if (yterco === undefined) {
-            yterco = [];
-        }
+        if (!ytec) ytec = [];
+        if (!ytercs) ytercs = [];
+        if (!yterct) yterct = [];
+        if (!yterco) yterco = [];
 
         res.status(200).json({
             page: "Youtube",

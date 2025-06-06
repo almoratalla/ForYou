@@ -14,7 +14,7 @@
         "noFallthroughCasesInSwitch": true,
         "noUncheckedIndexedAccess": true,
         "moduleResolution": "node",
-        "typeRoots": ["./node_modules/@types","./src/**/utils/@types"],
+        "typeRoots": ["./node_modules/@types", "./src/**/utils/@types"],
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "isolatedModules": true,
@@ -29,10 +29,10 @@
             "@resources/*": ["./src/resources/*"],
             "@server/*": ["./src/server/*"],
             "@utils/*": ["./src/utils/*"],
-            "@api/*": ["./src/server/api/*"],
+            "@api/*": ["./src/server/api/*"]
         },
         "plugins": [{ "name": "typescript-plugin-css-modules" }]
     },
-    "include": ["./src/**/**/*", "./tests/unit/**/*", "config/jest.config.ts"],
+    "include": ["./src/**/**/*", "./tests/unit/**/*", "config/jest.config.ts", "scripts/**/*"],
     "exclude": ["./dist", "node_modules", "./src/resources"]
 }
